@@ -92,4 +92,23 @@
     [self pickMediaFromSource:UIImagePickerControllerSourceTypePhotoLibrary];
 }
 
+#pragma mark - Image Picker Controller delegate methods
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    self.lastChosenMediaType = info[UIImagePickerControllerMediaType];
+    if ([self.lastChosenMediaType isEqual:(NSString *)kUTTypeImage]) {
+        UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
+        UIImage *shrunkenImage = [self shrinkImage:chosenImage toSize:self.imageView.bounds.size];
+        self.image = shrunkenImage;
+    } else if ([self.lastChosenMediaType isEqual:(NSString *)kUTTypeMovie]) {
+        self.movieURL = info[UIImagePickerControllerMediaURL];
+    }
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+}
+
 @end
